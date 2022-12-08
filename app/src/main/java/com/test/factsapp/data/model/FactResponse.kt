@@ -1,7 +1,7 @@
 package com.test.factsapp.data.model
 
-data class FactResponse(val data: List<FactData>)
+class FactResponse : ArrayList<FactResponseItem>()
 
-data class FactData(
+data class FactResponseItem(
     val fact: String
 )

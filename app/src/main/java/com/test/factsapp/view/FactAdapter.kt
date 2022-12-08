@@ -5,13 +5,14 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.test.factsapp.data.model.FactData
+import com.test.factsapp.R
+import com.test.factsapp.data.model.FactResponseItem
 import com.test.factsapp.databinding.FactItemBinding
 import com.test.factsapp.other.RENDER_DISTANCE
 
 class FactAdapter(
     private val onEndReached: () -> Unit
-): ListAdapter<FactData, FactAdapter.FactViewHolder>(FactDiffCallBack()) {
+) : ListAdapter<FactResponseItem, FactAdapter.FactViewHolder>(FactDiffCallBack()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FactViewHolder {
         return FactViewHolder(
@@ -27,18 +28,46 @@ class FactAdapter(
         if (itemCount - position == RENDER_DISTANCE) {
             onEndReached()
         }
+        var liked = false
+        var rated = false
         holder.binding.fact.text = getItem(position).fact
+        holder.binding.like.setOnClickListener {
+            liked = if (!liked) {
+                holder.binding.like.setImageResource(
+                    R.drawable.liked
+                )
+                true
+            } else {
+                holder.binding.like.setImageResource(
+                    R.drawable.unliked
+                )
+                false
+            }
+        }
+        holder.binding.rate.setOnClickListener {
+            rated = if (!rated) {
+                holder.binding.rate.setImageResource(
+                    R.drawable.rated
+                )
+                true
+            } else {
+                holder.binding.rate.setImageResource(
+                    R.drawable.unrated
+                )
+                false
+            }
+        }
     }
 
     class FactViewHolder(val binding: FactItemBinding) : RecyclerView.ViewHolder(binding.root)
 }
 
-class FactDiffCallBack : DiffUtil.ItemCallback<FactData>(){
-    override fun areItemsTheSame(oldItem: FactData, newItem: FactData): Boolean {
+class FactDiffCallBack : DiffUtil.ItemCallback<FactResponseItem>() {
+    override fun areItemsTheSame(oldItem: FactResponseItem, newItem: FactResponseItem): Boolean {
         return oldItem.fact == newItem.fact
     }
 
-    override fun areContentsTheSame(oldItem: FactData, newItem: FactData): Boolean {
+    override fun areContentsTheSame(oldItem: FactResponseItem, newItem: FactResponseItem): Boolean {
         return oldItem == newItem
     }
 

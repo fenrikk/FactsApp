@@ -3,22 +3,21 @@ package com.test.factsapp.viewmodel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.test.factsapp.data.FactApi
-import com.test.factsapp.data.model.FactData
+import com.test.factsapp.data.model.FactResponseItem
 import com.test.factsapp.other.FETCH_VALUE
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.schedulers.Schedulers
 
-class FactListViewModel(var factApi: FactApi): BaseViewModel() {
+class FactListViewModel(var factApi: FactApi) : BaseViewModel() {
 
-    private val factData = MutableLiveData<List<FactData>>()
+    private val factData = MutableLiveData<List<FactResponseItem>>()
 
     init {
         fetchFacts()
     }
 
-    fun fetchFacts(){
+    fun fetchFacts() {
         factApi.getFacts(FETCH_VALUE)
-            .map { it.data }
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({
@@ -29,7 +28,7 @@ class FactListViewModel(var factApi: FactApi): BaseViewModel() {
             }).autoDispose()
     }
 
-    fun getFactData(): LiveData<List<FactData>>{
+    fun getFactData(): LiveData<List<FactResponseItem>> {
         return factData
     }
 }
